@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 
-import sys
-import os
-import hashlib
+from sys import platform
+from os import path, walk
+from hashlib import md5
 
 BLOCKSIZE = 65536
 
@@ -12,7 +12,7 @@ def md5(file_path):
     :param file_path: full path to the file.
     """
 
-    hasher = hashlib.md5()
+    hasher = md5()
     with open(file_path, 'rb') as f:
         while True:
             buf = f.read(BLOCKSIZE)
@@ -30,7 +30,7 @@ def size(full_path):
     :param full_path: full path to the file.
     """
 
-    file_size = os.path.getsize(full_path)
+    file_size = path.getsize(full_path)
     str_file_size = str(file_size)
     print(str_file_size, 'b')
 
@@ -49,9 +49,9 @@ def calculate(directory):
        :param directory: tuple of files in the directory."""
 
     # Set correct slashes for the OS
-    if sys.platform == 'windows':
+    if platform == 'windows':
         slash = '\\'
-    elif sys.platform == 'linux':
+    elif platform == 'linux':
         slash = '/'
     else:
         print('#Error. Unknown platform.')
@@ -71,14 +71,14 @@ def scan(tree):
     """Scan the directory and send the obtained tuple to calculate.
        :param tree: path to file or directory"""
 
-    tree = os.path.normpath(tree)
-    assert os.path.exists(tree), "#Error. The path '{}' is" \
+    tree = path.normpath(tree)
+    assert path.exists(tree), "#Error. The path '{}' is" \
                                  " invalid or doesn't exist.".format(str(tree))
 
-    if os.path.isfile(tree):
+    if path.isfile(tree):
         return md5(tree)
-    elif os.path.isdir(tree):
-        tree = os.walk(tree)
+    elif path.isdir(tree):
+        tree = walk(tree)
         for directory in tree:
             print('...................')
             print('Current directory:')
