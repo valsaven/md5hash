@@ -2,7 +2,7 @@
 
 from sys import platform
 from os import path, walk
-from hashlib import md5
+import hashlib
 
 BLOCKSIZE = 65536
 
@@ -12,17 +12,7 @@ def md5(file_path):
     :param file_path: full path to the file.
     """
 
-    hasher = md5()
-    with open(file_path, 'rb') as f:
-        while True:
-            buf = f.read(BLOCKSIZE)
-            if not buf:
-                break
-            while len(buf) > 0:
-                hasher.update(buf)
-                buf = f.read(BLOCKSIZE)
-    md5_hash = hasher.hexdigest().upper()
-    return md5_hash
+    return hashlib.md5(open(file_path,'rb').read()).hexdigest().upper()
 
 
 def size(full_path):
